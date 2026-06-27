@@ -4,16 +4,32 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>VideoCut 控制台</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="shell">
       <section class="toolbar">
         <div>
           <h1>VideoCut 控制台</h1>
-          <p id="rootPath">正在读取项目路径...</p>
+          <p>把素材、brief 和质量门禁放到一个清晰入口里。</p>
+          <p id="rootPath" class="root-path">正在读取项目路径...</p>
         </div>
         <div class="status" id="runStatus">就绪</div>
+      </section>
+
+      <section class="overview" aria-label="流程概览">
+        <div>
+          <strong>1. brief</strong>
+          <span>选择题材和平台</span>
+        </div>
+        <div>
+          <strong>2. 素材</strong>
+          <span>导入视频和音频</span>
+        </div>
+        <div>
+          <strong>3. 执行</strong>
+          <span>生成草稿与门禁报告</span>
+        </div>
       </section>
 
       <section class="workspace">
@@ -92,12 +108,25 @@
 
           <label>
             字幕风格
-            <input name="subtitle_style" value="large safe-area captions" />
+            <select name="subtitle_style">
+              <option value="large safe-area captions">大号安全区字幕</option>
+              <option value="clean bottom captions">底部简洁字幕</option>
+              <option value="keyword-highlight captions">关键词高亮字幕</option>
+              <option value="minimal captions">极简字幕</option>
+              <option value="social bold captions">社媒粗体字幕</option>
+            </select>
           </label>
 
           <label>
             开头策略
-            <input name="opening" value="strong hook in first 3 seconds" />
+            <select name="opening">
+              <option value="strong hook in first 3 seconds">前三秒强钩子</option>
+              <option value="direct question">直接提问</option>
+              <option value="surprising claim">反常识观点</option>
+              <option value="pain point first">先打痛点</option>
+              <option value="before after contrast">前后对比</option>
+              <option value="fast visual contrast">快速画面对比</option>
+            </select>
           </label>
 
           <div class="switches">
@@ -192,6 +221,6 @@
       </section>
     </main>
 
-    <script src="/app.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>
