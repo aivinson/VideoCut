@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VideoCut 控制台</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="toolbar">
+        <div>
+          <h1>VideoCut 控制台</h1>
+          <p id="rootPath">正在读取项目路径...</p>
+        </div>
+        <div class="status" id="runStatus">就绪</div>
+      </section>
+
+      <section class="workspace">
+        <form id="runForm" class="panel">
+          <div class="section-title">
+            <h2>任务 brief</h2>
+            <span>生成多条同题材短片草稿</span>
+          </div>
+
+          <label>
+            项目名
+            <input name="project" value="sample-short-video-batch" />
+          </label>
+
+          <label>
+            题材
+            <input name="topic" value="productivity tips" />
+          </label>
+
+          <div class="grid">
+            <label>
+              平台
+              <select name="platform">
+                <option value="douyin">抖音</option>
+                <option value="xiaohongshu">小红书</option>
+                <option value="tiktok">TikTok</option>
+                <option value="youtube_shorts">YouTube Shorts</option>
+              </select>
+            </label>
+            <label>
+              生成数量
+              <input name="target_count" type="number" min="1" max="20" value="2" />
+            </label>
+          </div>
+
+          <div class="grid">
+            <label>
+              最短秒数
+              <input name="duration_min" type="number" min="1" value="15" />
+            </label>
+            <label>
+              最长秒数
+              <input name="duration_max" type="number" min="1" value="60" />
+            </label>
+          </div>
+
+          <div class="grid">
+            <label>
+              宽
+              <input name="width" type="number" min="1" value="1080" />
+            </label>
+            <label>
+              高
+              <input name="height" type="number" min="1" value="1920" />
+            </label>
+          </div>
+
+          <div class="grid">
+            <label>
+              比例
+              <input name="aspect_ratio" value="9:16" />
+            </label>
+            <label>
+              节奏
+              <select name="pace">
+                <option value="fast">快节奏</option>
+                <option value="medium">中等节奏</option>
+                <option value="calm">平稳节奏</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            字幕风格
+            <input name="subtitle_style" value="large safe-area captions" />
+          </label>
+
+          <label>
+            开头策略
+            <input name="opening" value="strong hook in first 3 seconds" />
+          </label>
+
+          <div class="switches">
+            <label class="check">
+              <input name="dry_run" type="checkbox" checked />
+              Dry-run
+            </label>
+            <label class="check">
+              <input name="avoid_repeated_opening" type="checkbox" checked />
+              避免重复开头
+            </label>
+            <label class="check">
+              <input name="human_review_required" type="checkbox" checked />
+              需要人工审片
+            </label>
+          </div>
+
+          <div class="section-title">
+            <h2>素材路径</h2>
+            <span>默认读取项目内目录</span>
+          </div>
+
+          <label>
+            视频素材目录
+            <input name="videos_dir" id="videosDir" />
+          </label>
+
+          <label>
+            音频素材目录
+            <input name="audio_dir" id="audioDir" />
+          </label>
+
+          <label>
+            输出目录
+            <input name="outputs_dir" id="outputsDir" />
+          </label>
+
+          <label>
+            日志目录
+            <input name="logs_dir" id="logsDir" />
+          </label>
+
+          <button type="submit" id="runButton">开始执行</button>
+        </form>
+
+        <aside class="panel results">
+          <div class="section-title">
+            <h2>执行结果</h2>
+            <span id="lastRun">尚未执行</span>
+          </div>
+
+          <div class="metric-row">
+            <div>
+              <span>Gate</span>
+              <strong id="gateStatus">-</strong>
+            </div>
+            <div>
+              <span>Brief</span>
+              <strong id="briefPath">-</strong>
+            </div>
+          </div>
+
+          <h3>门禁检查</h3>
+          <div id="gateList" class="gate-list"></div>
+
+          <h3>产物路径</h3>
+          <pre id="artifactList">点击“开始执行”后显示。</pre>
+
+          <h3>错误信息</h3>
+          <pre id="errorBox">无</pre>
+        </aside>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
+

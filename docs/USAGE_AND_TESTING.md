@@ -35,6 +35,39 @@ cd /Users/zzy/Documents/VideoCut
 
 ## 3. 一键跑通 MVP
 
+### 方式 A：网页入口
+
+启动本地网页控制台：
+
+```bash
+/Users/zzy/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 -m webapp.server
+```
+
+打开：
+
+```text
+http://127.0.0.1:8765
+```
+
+在页面里填写题材、平台、生成数量、时长、素材目录，然后点击“开始执行”。执行完成后，右侧会显示 gate 状态、门禁检查和产物路径。
+
+如果浏览器页面打不开，先确认启动命令窗口里出现了：
+
+```text
+VideoCut web UI: http://127.0.0.1:8765
+```
+
+浏览器为了安全不会把 Finder 里选择文件夹的真实本机路径自动交给服务端；第一版页面采用“路径输入”的方式。最简单的用法是把素材放进项目默认目录：
+
+```text
+inputs/videos/
+inputs/audio/
+```
+
+页面会自动填好这两个默认路径。
+
+### 方式 B：命令行
+
 执行 dry-run：
 
 ```bash
@@ -221,4 +254,3 @@ python3 -m unittest discover -s tests
 3. 接入 FFmpeg/MoviePy，让 `edit-assembly-agent` 生成可播放视频。
 4. 增强 gate，检查黑屏、静音、字幕安全区和真实视频比例。
 5. 加入人工反馈入口，把重复问题沉淀进 Skill 和 Gate。
-
