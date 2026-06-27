@@ -2,10 +2,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import warnings
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
+
+warnings.filterwarnings("ignore", "'cgi' is deprecated", DeprecationWarning)
+import cgi
 
 from harness.context import RunContext
 from harness.io import read_json, write_json
@@ -14,6 +18,14 @@ from harness.run import run
 
 ROOT = Path(__file__).resolve().parents[1]
 STATIC_DIR = ROOT / "webapp" / "static"
+UPLOAD_TARGETS = {
+    "video": ROOT / "inputs" / "videos",
+    "audio": ROOT / "inputs" / "audio",
+}
+SUPPORTED_UPLOAD_EXTENSIONS = {
+    "video": {".mp4", ".mov", ".mkv", ".webm"},
+    "audio": {".wav", ".mp3", ".m4a", ".aac", ".flac"},
+}
 
 
 class VideoCutHandler(SimpleHTTPRequestHandler):
@@ -33,6 +45,8 @@ class VideoCutHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self) -> None:
         parsed = urlparse(self.path)
+        if parsed.path == "/api/upload":
+            return self._handle_upload(parsed)
         if parsed.path != "/api/run":
             return self.send_error(HTTPStatus.NOT_FOUND, "Unknown endpoint")
 
@@ -82,8 +96,53 @@ class VideoCutHandler(SimpleHTTPRequestHandler):
             "default_audio_dir": str(ROOT / "inputs" / "audio"),
             "default_outputs_dir": str(ROOT / "outputs"),
             "default_logs_dir": str(ROOT / "logs"),
+            "asset_counts": {
+                "videos": count_supported_files(ROOT / "inputs" / "videos", "video"),
+                "audio": count_supported_files(ROOT / "inputs" / "audio", "audio"),
+            },
             "last_summary_exists": (ROOT / "outputs" / "artifacts" / "run-summary.json").exists(),
         }
+
+    def _handle_upload(self, parsed) -> None:
+        kind = parse_qs(parsed.query).get("kind", [""])[0]
+        if kind not in UPLOAD_TARGETS:
+            return self._send_json({"ok": False, "error": "Unsupported upload kind."}, HTTPStatus.BAD_REQUEST)
+
+        target_dir = UPLOAD_TARGETS[kind]
+        target_dir.mkdir(parents=True, exist_ok=True)
+        form = cgi.FieldStorage(
+            fp=self.rfile,
+            headers=self.headers,
+            environ={
+                "REQUEST_METHOD": "POST",
+                "CONTENT_TYPE": self.headers.get("Content-Type", ""),
+                "CONTENT_LENGTH": self.headers.get("Content-Length", "0"),
+            },
+        )
+        files = form["files"] if "files" in form else []
+        if not isinstance(files, list):
+            files = [files]
+
+        saved = []
+        skipped = []
+        for item in files:
+            filename = safe_upload_filename(item.filename or "")
+            if not filename:
+                skipped.append({"name": item.filename or "", "reason": "empty filename"})
+                continue
+            if Path(filename).suffix.lower() not in SUPPORTED_UPLOAD_EXTENSIONS[kind]:
+                skipped.append({"name": filename, "reason": "unsupported extension"})
+                continue
+            destination = unique_destination(target_dir, filename)
+            with destination.open("wb") as output:
+                while True:
+                    chunk = item.file.read(1024 * 1024)
+                    if not chunk:
+                        break
+                    output.write(chunk)
+            saved.append(str(destination))
+
+        self._send_json({"ok": True, "kind": kind, "saved": saved, "skipped": skipped})
 
 
 def resolve_user_path(value: str | None, default: Path) -> Path:
@@ -93,6 +152,33 @@ def resolve_user_path(value: str | None, default: Path) -> Path:
     if not path.is_absolute():
         path = ROOT / path
     return path.resolve()
+
+
+def count_supported_files(directory: Path, kind: str) -> int:
+    extensions = SUPPORTED_UPLOAD_EXTENSIONS[kind]
+    if not directory.exists():
+        return 0
+    return sum(1 for path in directory.iterdir() if path.is_file() and path.suffix.lower() in extensions)
+
+
+def safe_upload_filename(filename: str) -> str:
+    name = Path(filename.replace("\\", "/")).name.strip()
+    safe = "".join(char if char.isalnum() or char in "._- " else "_" for char in name)
+    return safe.strip(" .")
+
+
+def unique_destination(directory: Path, filename: str) -> Path:
+    candidate = directory / filename
+    if not candidate.exists():
+        return candidate
+    stem = candidate.stem
+    suffix = candidate.suffix
+    index = 2
+    while True:
+        candidate = directory / f"{stem}_{index}{suffix}"
+        if not candidate.exists():
+            return candidate
+        index += 1
 
 
 def build_brief(payload: dict) -> dict:

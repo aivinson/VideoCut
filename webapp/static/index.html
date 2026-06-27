@@ -18,6 +18,10 @@
 
       <section class="workspace">
         <form id="runForm" class="panel">
+          <div id="fileModeWarning" class="warning" hidden>
+            请通过 http://127.0.0.1:8765 打开本页面。直接打开 HTML 文件不能选择素材并执行任务。
+          </div>
+
           <div class="section-title">
             <h2>任务 brief</h2>
             <span>生成多条同题材短片草稿</span>
@@ -112,29 +116,49 @@
           </div>
 
           <div class="section-title">
-            <h2>素材路径</h2>
-            <span>默认读取项目内目录</span>
+            <h2>素材选择</h2>
+            <span>选择后自动复制到项目目录</span>
           </div>
 
-          <label>
-            视频素材目录
-            <input name="videos_dir" id="videosDir" />
-          </label>
+          <div class="upload-grid">
+            <label class="upload-card">
+              <strong>视频素材</strong>
+              <span id="videoUploadStatus">未选择</span>
+              <input id="videoPicker" type="file" multiple webkitdirectory directory accept="video/*,.mkv,.webm" />
+            </label>
 
-          <label>
-            音频素材目录
-            <input name="audio_dir" id="audioDir" />
-          </label>
+            <label class="upload-card">
+              <strong>音频素材</strong>
+              <span id="audioUploadStatus">未选择</span>
+              <input id="audioPicker" type="file" multiple webkitdirectory directory accept="audio/*,.m4a,.aac,.flac" />
+            </label>
+          </div>
 
-          <label>
-            输出目录
-            <input name="outputs_dir" id="outputsDir" />
-          </label>
+          <p class="hint" id="assetCounts">正在读取素材数量...</p>
 
-          <label>
-            日志目录
-            <input name="logs_dir" id="logsDir" />
-          </label>
+          <details class="advanced">
+            <summary>高级路径设置</summary>
+
+            <label>
+              视频素材目录
+              <input name="videos_dir" id="videosDir" />
+            </label>
+
+            <label>
+              音频素材目录
+              <input name="audio_dir" id="audioDir" />
+            </label>
+
+            <label>
+              输出目录
+              <input name="outputs_dir" id="outputsDir" />
+            </label>
+
+            <label>
+              日志目录
+              <input name="logs_dir" id="logsDir" />
+            </label>
+          </details>
 
           <button type="submit" id="runButton">开始执行</button>
         </form>
@@ -171,4 +195,3 @@
     <script src="/app.js"></script>
   </body>
 </html>
-

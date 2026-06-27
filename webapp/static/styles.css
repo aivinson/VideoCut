@@ -73,6 +73,17 @@ p,
   font-weight: 650;
 }
 
+.warning {
+  margin-bottom: 14px;
+  border: 1px solid #f6c768;
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: #fff8e5;
+  color: #7a4d00;
+  font-size: 13px;
+  font-weight: 650;
+}
+
 .workspace {
   display: grid;
   grid-template-columns: minmax(380px, 520px) minmax(0, 1fr);
@@ -132,6 +143,64 @@ select:focus {
   flex-wrap: wrap;
   gap: 10px;
   margin: 8px 0 18px;
+}
+
+.upload-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.upload-card {
+  min-height: 110px;
+  margin: 0;
+  border: 1px dashed #9aa8bd;
+  border-radius: 8px;
+  padding: 14px;
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.upload-card strong {
+  font-size: 15px;
+}
+
+.upload-card span,
+.hint {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.upload-card input {
+  min-height: auto;
+  border: 0;
+  padding: 6px 0 0;
+  background: transparent;
+}
+
+.hint {
+  margin: 0 0 12px;
+}
+
+.advanced {
+  margin: 8px 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #fbfcff;
+}
+
+.advanced summary {
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.advanced label:first-of-type {
+  margin-top: 12px;
 }
 
 .check {
@@ -244,3 +313,10 @@ pre {
   }
 }
 
+@media (max-width: 560px) {
+  .grid,
+  .upload-grid,
+  .metric-row {
+    grid-template-columns: 1fr;
+  }
+}

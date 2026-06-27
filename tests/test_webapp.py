@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import unittest
+import tempfile
 from pathlib import Path
 
-from webapp.server import build_brief, resolve_user_path
+from webapp.server import build_brief, safe_upload_filename, unique_destination, resolve_user_path
 
 
 class WebAppTest(unittest.TestCase):
@@ -34,7 +35,17 @@ class WebAppTest(unittest.TestCase):
         path = resolve_user_path("inputs/videos", Path("/tmp/default"))
         self.assertTrue(str(path).endswith("inputs/videos"))
 
+    def test_safe_upload_filename_flattens_folder_paths(self) -> None:
+        self.assertEqual(safe_upload_filename("folder/sub folder/clip 01.mp4"), "clip 01.mp4")
+        self.assertEqual(safe_upload_filename("../bad:name.mov"), "bad_name.mov")
+
+    def test_unique_destination_adds_suffix(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            self.assertEqual(unique_destination(directory, "clip.mp4"), directory / "clip.mp4")
+            (directory / "clip.mp4").write_text("x", encoding="utf-8")
+            self.assertEqual(unique_destination(directory, "clip.mp4"), directory / "clip_2.mp4")
+
 
 if __name__ == "__main__":
     unittest.main()
-

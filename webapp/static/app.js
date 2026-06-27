@@ -8,6 +8,12 @@ const gateList = document.querySelector("#gateList");
 const artifactList = document.querySelector("#artifactList");
 const errorBox = document.querySelector("#errorBox");
 const lastRun = document.querySelector("#lastRun");
+const videoPicker = document.querySelector("#videoPicker");
+const audioPicker = document.querySelector("#audioPicker");
+const videoUploadStatus = document.querySelector("#videoUploadStatus");
+const audioUploadStatus = document.querySelector("#audioUploadStatus");
+const assetCounts = document.querySelector("#assetCounts");
+const fileModeWarning = document.querySelector("#fileModeWarning");
 
 function formPayload() {
   const data = new FormData(form);
@@ -56,7 +62,61 @@ async function loadStatus() {
   document.querySelector("#audioDir").value = status.default_audio_dir;
   document.querySelector("#outputsDir").value = status.default_outputs_dir;
   document.querySelector("#logsDir").value = status.default_logs_dir;
+  assetCounts.textContent = `当前默认目录：视频 ${status.asset_counts.videos} 个，音频 ${status.asset_counts.audio} 个`;
 }
+
+async function uploadFiles(kind, files, statusElement) {
+  if (!files.length) {
+    statusElement.textContent = "未选择";
+    return;
+  }
+
+  statusElement.textContent = `上传中：${files.length} 个文件`;
+  runStatus.textContent = "上传中";
+  const body = new FormData();
+  for (const file of files) {
+    body.append("files", file, file.webkitRelativePath || file.name);
+  }
+
+  const response = await fetch(`/api/upload?kind=${kind}`, {
+    method: "POST",
+    body,
+  });
+  const result = await response.json();
+  if (!result.ok) {
+    throw new Error(result.error || "上传失败");
+  }
+
+  const skipped = result.skipped.length ? `，跳过 ${result.skipped.length} 个` : "";
+  statusElement.textContent = `已导入 ${result.saved.length} 个${skipped}`;
+  runStatus.textContent = "就绪";
+  await loadStatus();
+}
+
+if (window.location.protocol === "file:") {
+  fileModeWarning.hidden = false;
+  runStatus.textContent = "需启动服务";
+}
+
+videoPicker.addEventListener("change", async () => {
+  try {
+    errorBox.textContent = "无";
+    await uploadFiles("video", [...videoPicker.files], videoUploadStatus);
+  } catch (error) {
+    runStatus.textContent = "失败";
+    errorBox.textContent = error.message;
+  }
+});
+
+audioPicker.addEventListener("change", async () => {
+  try {
+    errorBox.textContent = "无";
+    await uploadFiles("audio", [...audioPicker.files], audioUploadStatus);
+  } catch (error) {
+    runStatus.textContent = "失败";
+    errorBox.textContent = error.message;
+  }
+});
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -93,4 +153,3 @@ loadStatus().catch((error) => {
   rootPath.textContent = "状态读取失败";
   errorBox.textContent = error.message;
 });
-
