@@ -20,3 +20,6 @@ python3 -m unittest discover -s tests
 
 Dry-run mode writes placeholder renders and full manifests so the workflow can be
 validated before Whisper, FFmpeg, Auto-Editor, or MoviePy are installed.
+
+For Chinese step-by-step usage and testing instructions, see
+[`docs/USAGE_AND_TESTING.md`](docs/USAGE_AND_TESTING.md).
