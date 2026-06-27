@@ -1,0 +1,8 @@
+interface:
+  display_name: "Video Cut Agent"
+  short_description: "Batch short-video workflow with gates"
+  brand_color: "#2563EB"
+  default_prompt: "Use $video-cut-agent to turn my video and voice assets into multiple gated short-video drafts."
+policy:
+  allow_implicit_invocation: true
+

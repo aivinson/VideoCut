@@ -1,0 +1,25 @@
+{
+  "project": "sample-short-video-batch",
+  "topic": "productivity tips",
+  "platform": "douyin",
+  "target_count": 2,
+  "duration_seconds": {
+    "min": 15,
+    "max": 60
+  },
+  "aspect_ratio": "9:16",
+  "resolution": {
+    "width": 1080,
+    "height": 1920
+  },
+  "style": {
+    "pace": "fast",
+    "subtitle": "large safe-area captions",
+    "opening": "strong hook in first 3 seconds"
+  },
+  "constraints": {
+    "avoid_repeated_opening": true,
+    "human_review_required": true
+  }
+}
+
