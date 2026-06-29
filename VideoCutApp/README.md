@@ -39,6 +39,24 @@ OK
 VideoCut run complete: gates=pass
 ```
 
+## 关于最终 MP4
+
+当前网页已经支持：
+
+1. 导入素材
+2. 分析素材
+3. 填写剪辑要求
+4. 生成 HyperFrames 成片工程
+
+如果要直接渲染最终 `.mp4`，本机还需要安装：
+
+```text
+FFmpeg
+FFprobe
+```
+
+没有这两个依赖时，页面会显示 `blocked`，并给出已经生成的 HyperFrames 工程路径。
+
 ## 常用文件在哪里改
 
 页面结构：
@@ -99,4 +117,3 @@ Agent 流程：
 ## 注意
 
 不要直接双击 `../webapp/static/index.html`。直接打开 HTML 只能看页面，不能选择素材并执行任务。
-

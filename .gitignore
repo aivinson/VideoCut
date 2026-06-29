@@ -5,6 +5,7 @@ logs/
 # Large local media inputs
 inputs/videos/*
 inputs/audio/*
+inputs/brief.web.json
 !inputs/videos/.gitkeep
 !inputs/audio/.gitkeep
 

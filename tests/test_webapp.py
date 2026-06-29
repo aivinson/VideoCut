@@ -5,6 +5,7 @@ import tempfile
 from pathlib import Path
 
 from webapp.server import build_brief, safe_upload_filename, unique_destination, resolve_user_path
+from webapp.video_workflow import analyze_assets, create_hyperframes_project
 
 
 class WebAppTest(unittest.TestCase):
@@ -45,6 +46,44 @@ class WebAppTest(unittest.TestCase):
             self.assertEqual(unique_destination(directory, "clip.mp4"), directory / "clip.mp4")
             (directory / "clip.mp4").write_text("x", encoding="utf-8")
             self.assertEqual(unique_destination(directory, "clip.mp4"), directory / "clip_2.mp4")
+
+    def test_analyze_assets_counts_uploaded_media(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "inputs" / "videos").mkdir(parents=True)
+            (root / "inputs" / "audio").mkdir(parents=True)
+            (root / "inputs" / "videos" / "clip.mp4").write_bytes(b"video")
+            (root / "inputs" / "audio" / "voice.mp3").write_bytes(b"audio")
+
+            analysis = analyze_assets(root, {"topic": "demo", "target_count": 1})
+
+            self.assertEqual(len(analysis["videos"]), 1)
+            self.assertEqual(len(analysis["audio"]), 1)
+            self.assertTrue(analysis["suggestions"])
+
+    def test_create_hyperframes_project_writes_composition(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "inputs" / "videos").mkdir(parents=True)
+            (root / "inputs" / "audio").mkdir(parents=True)
+            (root / "inputs" / "videos" / "clip.mp4").write_bytes(b"video")
+
+            manifest = create_hyperframes_project(
+                root,
+                {
+                    "project": "Demo Project",
+                    "topic": "demo topic",
+                    "platform": "douyin",
+                    "target_count": 1,
+                    "duration_seconds": {"min": 10, "max": 20},
+                    "resolution": {"width": 1080, "height": 1920},
+                },
+                "Make it energetic.",
+            )
+
+            html = Path(manifest["index_html"]).read_text(encoding="utf-8")
+            self.assertIn('data-composition-id="videocut-main"', html)
+            self.assertIn("Make it energetic.", html)
 
 
 if __name__ == "__main__":

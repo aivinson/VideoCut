@@ -157,9 +157,9 @@ label {
 }
 
 input,
-select {
+select,
+textarea {
   width: 100%;
-  min-height: 38px;
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 8px 10px;
@@ -168,8 +168,20 @@ select {
   font: inherit;
 }
 
+input,
+select {
+  min-height: 38px;
+}
+
+textarea {
+  min-height: 110px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
   outline: 2px solid rgba(37, 99, 235, 0.18);
   border-color: var(--accent);
 }
@@ -314,6 +326,21 @@ button:hover {
   background: var(--accent-strong);
 }
 
+.action-row {
+  margin: 12px 0;
+}
+
+.secondary-button {
+  background: #fff;
+  color: var(--accent);
+  border: 1px solid #b8c7e6;
+  box-shadow: none;
+}
+
+.secondary-button:hover {
+  background: #eef4ff;
+}
+
 button:disabled {
   cursor: wait;
   opacity: 0.7;
@@ -346,6 +373,39 @@ button:disabled {
 .gate-list {
   display: grid;
   gap: 8px;
+}
+
+.analysis-box {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: #fbfcff;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.analysis-box ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+}
+
+.analysis-box li {
+  margin-bottom: 6px;
+}
+
+.analysis-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.analysis-metrics span {
+  border: 1px solid #d7e1f3;
+  border-radius: 6px;
+  padding: 5px 8px;
+  background: #eef4ff;
+  color: var(--ink);
+  font-weight: 650;
 }
 
 .gate {

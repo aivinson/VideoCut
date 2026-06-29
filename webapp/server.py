@@ -14,6 +14,7 @@ import cgi
 from harness.context import RunContext
 from harness.io import read_json, write_json
 from harness.run import run
+from webapp.video_workflow import analyze_assets, create_hyperframes_project, render_hyperframes
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,6 +48,10 @@ class VideoCutHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         if parsed.path == "/api/upload":
             return self._handle_upload(parsed)
+        if parsed.path == "/api/analyze":
+            return self._handle_analyze()
+        if parsed.path == "/api/produce":
+            return self._handle_produce()
         if parsed.path != "/api/run":
             return self.send_error(HTTPStatus.NOT_FOUND, "Unknown endpoint")
 
@@ -73,6 +78,36 @@ class VideoCutHandler(SimpleHTTPRequestHandler):
                 "brief_path": str(brief_path),
             }
             self._send_json(result)
+        except Exception as exc:
+            self._send_json({"ok": False, "error": str(exc)}, status=HTTPStatus.BAD_REQUEST)
+
+    def _handle_analyze(self) -> None:
+        try:
+            payload = self._read_json_body()
+            brief = build_brief(payload)
+            brief_path = ROOT / "inputs" / "brief.web.json"
+            write_json(brief_path, brief)
+            self._send_json({"ok": True, "analysis": analyze_assets(ROOT, brief), "brief_path": str(brief_path)})
+        except Exception as exc:
+            self._send_json({"ok": False, "error": str(exc)}, status=HTTPStatus.BAD_REQUEST)
+
+    def _handle_produce(self) -> None:
+        try:
+            payload = self._read_json_body()
+            brief = build_brief(payload)
+            requirements = str(payload.get("requirements") or "").strip()
+            brief_path = ROOT / "inputs" / "brief.web.json"
+            write_json(brief_path, brief)
+            manifest = create_hyperframes_project(ROOT, brief, requirements)
+            render_result = render_hyperframes(ROOT, manifest)
+            self._send_json(
+                {
+                    "ok": True,
+                    "brief_path": str(brief_path),
+                    "manifest": manifest,
+                    "render": render_result,
+                }
+            )
         except Exception as exc:
             self._send_json({"ok": False, "error": str(exc)}, status=HTTPStatus.BAD_REQUEST)
 

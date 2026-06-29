@@ -28,7 +28,7 @@
         </div>
         <div>
           <strong>3. 执行</strong>
-          <span>生成草稿与门禁报告</span>
+          <span>生成 HyperFrames 成片工程</span>
         </div>
       </section>
 
@@ -183,6 +183,15 @@
 
           <p class="hint" id="assetCounts">正在读取素材数量...</p>
 
+          <div class="action-row">
+            <button type="button" id="analyzeButton" class="secondary-button">分析素材</button>
+          </div>
+
+          <label>
+            剪辑要求
+            <textarea name="requirements" id="requirements" rows="5" placeholder="例如：剪成 30 秒产品介绍，开头要抓人，节奏快，突出使用前后对比。"></textarea>
+          </label>
+
           <details class="advanced">
             <summary>高级路径设置</summary>
 
@@ -207,7 +216,7 @@
             </label>
           </details>
 
-          <button type="submit" id="runButton">开始执行</button>
+          <button type="submit" id="runButton">生成成片</button>
         </form>
 
         <aside class="panel results">
@@ -229,6 +238,9 @@
 
           <h3>门禁检查</h3>
           <div id="gateList" class="gate-list"></div>
+
+          <h3>素材分析与建议</h3>
+          <div id="analysisBox" class="analysis-box">先导入素材，然后点击“分析素材”。</div>
 
           <h3>产物路径</h3>
           <pre id="artifactList">点击“开始执行”后显示。</pre>
