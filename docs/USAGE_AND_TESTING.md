@@ -37,6 +37,26 @@ cd /Users/zzy/Documents/VideoCut
 
 ### 方式 A：网页入口
 
+最简单方式：打开项目里的入口文件夹：
+
+```text
+/Users/zzy/Documents/VideoCut/VideoCutApp/
+```
+
+双击：
+
+```text
+启动VideoCut.command
+```
+
+然后打开：
+
+```text
+http://127.0.0.1:8765
+```
+
+如果你想用命令行启动，也可以继续看下面。
+
 启动本地网页控制台：
 
 ```bash

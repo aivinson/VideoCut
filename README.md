@@ -30,5 +30,8 @@ python3 -m webapp.server
 Open `http://127.0.0.1:8765` to fill in the brief, material folders, and run
 the harness from a browser.
 
+For a simpler local entry, open `VideoCutApp/` and double-click
+`启动VideoCut.command`.
+
 For Chinese step-by-step usage and testing instructions, see
 [`docs/USAGE_AND_TESTING.md`](docs/USAGE_AND_TESTING.md).
