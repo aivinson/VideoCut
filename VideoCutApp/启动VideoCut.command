@@ -22,6 +22,15 @@ echo "启动 VideoCut..."
 echo "项目目录：$PROJECT_DIR"
 echo "浏览器地址：http://127.0.0.1:8765"
 
+if command -v lsof >/dev/null 2>&1; then
+  OLD_PIDS="$(lsof -tiTCP:8765 -sTCP:LISTEN || true)"
+  if [ -n "$OLD_PIDS" ]; then
+    echo "检测到 8765 端口已有旧服务，正在清理..."
+    kill $OLD_PIDS >/dev/null 2>&1 || true
+    sleep 1
+  fi
+fi
+
 if command -v open >/dev/null 2>&1; then
   (sleep 1 && open "http://127.0.0.1:8765") >/dev/null 2>&1 &
 fi

@@ -195,6 +195,8 @@ select:focus {
 }
 
 .upload-card {
+  display: grid;
+  gap: 8px;
   min-height: 110px;
   margin: 0;
   border: 1px dashed #8aa4d6;
@@ -222,11 +224,37 @@ select:focus {
   font-weight: 500;
 }
 
-.upload-card input {
-  min-height: auto;
-  border: 0;
-  padding: 6px 0 0;
-  background: transparent;
+.upload-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.import-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  margin: 0;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.import-button.secondary {
+  border-color: #b8c7e6;
+  background: #fff;
+  color: var(--ink);
+}
+
+.import-button input {
+  display: none;
 }
 
 .hint {

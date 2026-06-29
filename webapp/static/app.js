@@ -8,8 +8,10 @@ const gateList = document.querySelector("#gateList");
 const artifactList = document.querySelector("#artifactList");
 const errorBox = document.querySelector("#errorBox");
 const lastRun = document.querySelector("#lastRun");
-const videoPicker = document.querySelector("#videoPicker");
-const audioPicker = document.querySelector("#audioPicker");
+const videoFilePicker = document.querySelector("#videoFilePicker");
+const videoFolderPicker = document.querySelector("#videoFolderPicker");
+const audioFilePicker = document.querySelector("#audioFilePicker");
+const audioFolderPicker = document.querySelector("#audioFolderPicker");
 const videoUploadStatus = document.querySelector("#videoUploadStatus");
 const audioUploadStatus = document.querySelector("#audioUploadStatus");
 const assetCounts = document.querySelector("#assetCounts");
@@ -98,25 +100,21 @@ if (window.location.protocol === "file:") {
   runStatus.textContent = "需启动服务";
 }
 
-videoPicker.addEventListener("change", async () => {
+async function handlePickerChange(kind, picker, statusElement) {
   try {
     errorBox.textContent = "无";
-    await uploadFiles("video", [...videoPicker.files], videoUploadStatus);
+    await uploadFiles(kind, [...picker.files], statusElement);
+    picker.value = "";
   } catch (error) {
     runStatus.textContent = "失败";
     errorBox.textContent = error.message;
   }
-});
+}
 
-audioPicker.addEventListener("change", async () => {
-  try {
-    errorBox.textContent = "无";
-    await uploadFiles("audio", [...audioPicker.files], audioUploadStatus);
-  } catch (error) {
-    runStatus.textContent = "失败";
-    errorBox.textContent = error.message;
-  }
-});
+videoFilePicker.addEventListener("change", () => handlePickerChange("video", videoFilePicker, videoUploadStatus));
+videoFolderPicker.addEventListener("change", () => handlePickerChange("video", videoFolderPicker, videoUploadStatus));
+audioFilePicker.addEventListener("change", () => handlePickerChange("audio", audioFilePicker, audioUploadStatus));
+audioFolderPicker.addEventListener("change", () => handlePickerChange("audio", audioFolderPicker, audioUploadStatus));
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();

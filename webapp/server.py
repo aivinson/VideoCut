@@ -145,6 +145,10 @@ class VideoCutHandler(SimpleHTTPRequestHandler):
         self._send_json({"ok": True, "kind": kind, "saved": saved, "skipped": skipped})
 
 
+class VideoCutServer(ThreadingHTTPServer):
+    allow_reuse_address = True
+
+
 def resolve_user_path(value: str | None, default: Path) -> Path:
     if not value:
         return default
@@ -227,7 +231,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     args = build_parser().parse_args()
-    server = ThreadingHTTPServer((args.host, args.port), VideoCutHandler)
+    server = VideoCutServer((args.host, args.port), VideoCutHandler)
     print(f"VideoCut web UI: http://{args.host}:{args.port}", flush=True)
     print("Press Ctrl+C to stop.", flush=True)
     server.serve_forever()

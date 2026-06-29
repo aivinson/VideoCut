@@ -150,17 +150,35 @@
           </div>
 
           <div class="upload-grid">
-            <label class="upload-card">
+            <div class="upload-card">
               <strong>视频素材</strong>
               <span id="videoUploadStatus">未选择</span>
-              <input id="videoPicker" type="file" multiple webkitdirectory directory accept="video/*,.mkv,.webm" />
-            </label>
+              <div class="upload-actions">
+                <label class="import-button">
+                  选择视频文件
+                  <input id="videoFilePicker" type="file" multiple accept="video/*,.mp4,.mov,.mkv,.webm" />
+                </label>
+                <label class="import-button secondary">
+                  选择视频文件夹
+                  <input id="videoFolderPicker" type="file" multiple webkitdirectory directory accept="video/*,.mp4,.mov,.mkv,.webm" />
+                </label>
+              </div>
+            </div>
 
-            <label class="upload-card">
+            <div class="upload-card">
               <strong>音频素材</strong>
               <span id="audioUploadStatus">未选择</span>
-              <input id="audioPicker" type="file" multiple webkitdirectory directory accept="audio/*,.m4a,.aac,.flac" />
-            </label>
+              <div class="upload-actions">
+                <label class="import-button">
+                  选择音频文件
+                  <input id="audioFilePicker" type="file" multiple accept="audio/*,.mp3,.wav,.m4a,.aac,.flac" />
+                </label>
+                <label class="import-button secondary">
+                  选择音频文件夹
+                  <input id="audioFolderPicker" type="file" multiple webkitdirectory directory accept="audio/*,.mp3,.wav,.m4a,.aac,.flac" />
+                </label>
+              </div>
+            </div>
           </div>
 
           <p class="hint" id="assetCounts">正在读取素材数量...</p>
